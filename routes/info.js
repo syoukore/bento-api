@@ -17,12 +17,17 @@ router.get('/', function(req, res, next) {
       ]
       Promise.all(queries)
         .then(function(ress) {
-          let user = ress[0][0];
-          res.json({"ip": ip, "user": user.name, "deposit": 0});
+          if (ress[0].length == 0) {
+            var user = null;
+          } else {
+            var user = ress[0][0].name;
+          }
+          res.json({"ip": ip, "user": user, "deposit": 0});
           db.close();
         })
         .catch(function (err) {
           console.log("Error when querying");
+          console.log(err);
           db.close();
         });
     })
