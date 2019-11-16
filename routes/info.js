@@ -13,13 +13,12 @@ router.get('/', function(req, res, next) {
     .then(function (db) {
       var dbo = db.db("test");
       var queries = [
-        dbo.collection("persons").find({}).toArray(),
-        dbo.collection("inventory").find({}).toArray(),
-        dbo.collection("orders").find({}).toArray()
+        dbo.collection("persons").find({ipList: ip}).toArray()
       ]
       Promise.all(queries)
         .then(function(ress) {
-          res.json({"ip": ip, "db": ress});
+          let user = ress[0][0];
+          res.json({"ip": ip, "user": user.name, "deposit": 0});
           db.close();
         })
         .catch(function (err) {
